@@ -5,7 +5,7 @@ import plotly.express as px
 
 st.set_page_config(
     page_title="Ram - Base de Clientes",
-    page_icon="https://www.ram.com.ar/content/dam/ram/rebrand/ram.svg",
+    page_icon="https://logos-world.net/wp-content/uploads/2022/03/RAM-Logo.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -27,10 +27,10 @@ html, body, [class*="css"] { font-family: 'Barlow', sans-serif; }
     font-weight: 700; letter-spacing: 3px; color: #e8e8f5;
     text-transform: uppercase; margin: 0;
 }
-.dash-sub { font-size: 11px; color: #00724e; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+.dash-sub { font-size: 11px; color: #b0a477; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
 .dash-badge {
-    background: rgba(0,136,204,0.12); border: 1px solid #00724e;
-    color: #00724e; font-size: 10px; padding: 4px 12px;
+    background: rgba(0,136,204,0.12); border: 1px solid #b0a477;
+    color: #b0a477; font-size: 10px; padding: 4px 12px;
     border-radius: 3px; letter-spacing: 1px; text-transform: uppercase;
 }
 .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 4px; }
@@ -40,7 +40,7 @@ html, body, [class*="css"] { font-family: 'Barlow', sans-serif; }
 .kpi-value { font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 600; color: #e8e8f5; line-height: 1; letter-spacing: -1px; }
 .kpi-sub { font-size: 10px; color: #444460; margin-top: 4px; }
 .kpi-bar { height: 2px; background: #1e1e30; border-radius: 1px; margin-top: 12px; }
-.kpi-bar-fill { height: 100%; background: #00724e; border-radius: 1px; }
+.kpi-bar-fill { height: 100%; background: #b0a477; border-radius: 1px; }
 .section-title {
     font-family: 'Barlow Condensed', sans-serif; font-size: 13px;
     font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
@@ -50,7 +50,7 @@ html, body, [class*="css"] { font-family: 'Barlow', sans-serif; }
 """, unsafe_allow_html=True)
 
 # ── Constantes ─────────────────────────────────────────────────────────────────
-SHEET_ID = "146V7WwyH1KCMRFIba77Dlm7IHsk4iF6yHaKBlFgYq_s"
+SHEET_ID = "1NQXseO4hPmyIhiUA1WsEmFmBDycGQLXdqO4nkHHZUa8"
 GID      = "0"
 CSV_URL  = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={GID}"
 
@@ -62,7 +62,7 @@ BASE = dict(
     font=dict(family="Barlow, sans-serif", color="#a0a0b8", size=11),
     xaxis=dict(gridcolor="#1e1e30", linecolor="#1e1e30", tickfont=dict(size=10)),
     yaxis=dict(gridcolor="#1e1e30", linecolor="#1e1e30", tickfont=dict(size=10)),
-    colorway=["#00724e","#00724e","#00aadd","#73bf69","#fade2a","#ff780a"],
+    colorway=["#b0a477","#b0a477","#00aadd","#73bf69","#fade2a","#ff780a"],
 )
 
 def layout(height=200, ml=12, mr=50, mt=8, mb=8, **extra):
@@ -240,9 +240,9 @@ NO_MB = {"displayModeBar": False}
 COLOR_MAP_GEN = {
     "Male":      "#3b82a0",
     "Female":    "#e05c9e",
-    "M":         "#00724e",
+    "M":         "#b0a477",
     "F":         "#e05c9e",
-    "Masculino": "#00724e",
+    "Masculino": "#b0a477",
     "Femenino":  "#e05c9e",
     SIN_DATO:    "#555570",
 }
@@ -292,7 +292,7 @@ if pagina == "General":
         anio_df["año_compra"] = anio_df["año_compra"].astype(int).astype(str)
         fig = go.Figure(go.Bar(
             x=anio_df["n"], y=anio_df["año_compra"], orientation="h",
-            marker_color="#00724e", marker_line_width=0,
+            marker_color="#b0a477", marker_line_width=0,
             text=anio_df["n"], textposition="outside",
             textfont=dict(size=10, color="#a0a0b8"),
         ))
@@ -308,7 +308,7 @@ if pagina == "General":
                        .sort_values("n", ascending=True).tail(8))
             fig2 = go.Figure(go.Bar(
                 x=prov_df["n"], y=prov_df["cl_dir_provincia"], orientation="h",
-                marker_color="#00724e", marker_line_width=0,
+                marker_color="#b0a477", marker_line_width=0,
                 text=prov_df["n"], textposition="outside",
                 textfont=dict(size=10, color="#a0a0b8"),
             ))
@@ -321,7 +321,7 @@ if pagina == "General":
         time_df = df_time.groupby("mes_compra").size().reset_index(name="n").sort_values("mes_compra")
         fig3 = go.Figure(go.Bar(
             x=time_df["mes_compra"], y=time_df["n"],
-            marker_color="#00724e", marker_line_width=0,
+            marker_color="#b0a477", marker_line_width=0,
             hovertemplate="<b>%{x}</b><br>Compras: %{y}<extra></extra>",
         ))
         fig3.update_layout(**layout(160, mr=12))
@@ -352,7 +352,7 @@ elif pagina == "Por modelo":
     with col1:
         # Torta: distribución de compras por modelo (usar df para mantener todos)
         mod_pie = df.groupby("am_modelocl").size().reset_index(name="n")
-        colors  = ["#00724e","#00724e","#00aadd","#73bf69","#fade2a","#ff780a","#e02f44","#555570"]
+        colors  = ["#b0a477","#b0a477","#00aadd","#73bf69","#fade2a","#ff780a","#e02f44","#555570"]
         label_colors = ["#555570" if l == SIN_DATO else colors[i % len(colors)]
                         for i, l in enumerate(mod_pie["am_modelocl"])]
         fig = go.Figure(go.Pie(
@@ -371,7 +371,7 @@ elif pagina == "Por modelo":
     with col2:
         mod_uni = (df.groupby("am_modelocl")["cl_k_cliente"]
                    .nunique().reset_index(name="n").sort_values("n", ascending=False))
-        bar_colors = ["#555570" if m == SIN_DATO else "#00724e" for m in mod_uni["am_modelocl"]]
+        bar_colors = ["#555570" if m == SIN_DATO else "#b0a477" for m in mod_uni["am_modelocl"]]
         fig2 = go.Figure(go.Bar(
             x=mod_uni["am_modelocl"].astype(str), y=mod_uni["n"],
             marker_color=bar_colors, marker_line_width=0,
@@ -394,7 +394,7 @@ elif pagina == "Por modelo":
         if not trend.empty:
             fig3 = px.line(
                 trend, x="mes_compra", y="n", color="am_modelocl",
-                color_discrete_sequence=["#00724e","#00724e","#00aadd","#73bf69",
+                color_discrete_sequence=["#b0a477","#b0a477","#00aadd","#73bf69",
                                          "#fade2a","#ff780a","#555570"],
             )
             fig3.update_traces(line_width=2)
@@ -428,7 +428,7 @@ elif pagina == "Por provincia":
             prov_df = (df.groupby("cl_dir_provincia")
                        .agg(clientes=("cl_k_cliente","nunique"))
                        .reset_index().sort_values("clientes", ascending=True))
-            bar_colors = ["#555570" if p == SIN_DATO else "#00724e" for p in prov_df["cl_dir_provincia"]]
+            bar_colors = ["#555570" if p == SIN_DATO else "#b0a477" for p in prov_df["cl_dir_provincia"]]
             fig = go.Figure(go.Bar(
                 x=prov_df["clientes"], y=prov_df["cl_dir_provincia"], orientation="h",
                 marker_color=bar_colors, marker_line_width=0,
@@ -446,7 +446,7 @@ elif pagina == "Por provincia":
                           .nunique().reset_index(name="n")
                           .sort_values("n", ascending=False).head(12)
                           .sort_values("n", ascending=True))
-                bar_colors2 = ["#555570" if l == SIN_DATO else "#00724e" for l in loc_df["cl_dir_localidad"]]
+                bar_colors2 = ["#555570" if l == SIN_DATO else "#b0a477" for l in loc_df["cl_dir_localidad"]]
                 fig2 = go.Figure(go.Bar(
                     x=loc_df["n"], y=loc_df["cl_dir_localidad"], orientation="h",
                     marker_color=bar_colors2, marker_line_width=0,
@@ -567,7 +567,7 @@ elif pagina == "Género":
         for g in generos_reales:
             n   = gender_counts.get(g, 0)
             pct = round(n / total_gen * 100, 1) if total_gen > 0 else 0
-            col = COLOR_MAP_GEN.get(g, "#00724e")
+            col = COLOR_MAP_GEN.get(g, "#b0a477")
             kpi_html += f"""
             <div class="kpi-card">
               <div class="kpi-label">{g}</div>
@@ -594,7 +594,7 @@ elif pagina == "Género":
             st.markdown('<p class="section-title">Distribución por género</p>', unsafe_allow_html=True)
             gen_df = df_gen["Gender"].value_counts().reset_index()
             gen_df.columns = ["Gender", "n"]
-            pie_colors = [COLOR_MAP_GEN.get(g, "#00724e") for g in gen_df["Gender"]]
+            pie_colors = [COLOR_MAP_GEN.get(g, "#b0a477") for g in gen_df["Gender"]]
             fig = go.Figure(go.Pie(
                 labels=gen_df["Gender"], values=gen_df["n"], hole=0.5,
                 marker=dict(colors=pie_colors),
