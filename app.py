@@ -5,7 +5,7 @@ import plotly.express as px
 
 st.set_page_config(
     page_title="Ram - Base de Clientes",
-    page_icon="https://logos-world.net/wp-content/uploads/2022/03/RAM-Logo.png",
+    page_icon="https://www.ram.com.ar/content/dam/ram/home/ram_favicon_2025.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
