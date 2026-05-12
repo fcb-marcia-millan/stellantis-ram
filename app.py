@@ -447,7 +447,7 @@ elif pagina == "Por localidad":
     if "cl_dir_localidad" not in df.columns:
         st.warning("No se encontró la columna cl_dir_localidad en tus datos.")
     else:
-        col1, col2 = st.columns(2, gap="medium")
+        col2 = st.columns(2, gap="medium")
         with col1:
             st.markdown('<p class="section-title">Top 10 localidades</p>', unsafe_allow_html=True)
             top_loc = (df.groupby("cl_dir_localidad")["cl_k_cliente"]
