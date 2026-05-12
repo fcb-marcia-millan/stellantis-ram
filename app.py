@@ -443,27 +443,24 @@ elif pagina == "Por provincia":
 # POR LOCALIDAD
 # ══════════════════════════════════════════════════════════════════════════════
 elif pagina == "Por localidad":
-
     if "cl_dir_localidad" not in df.columns:
         st.warning("No se encontró la columna cl_dir_localidad en tus datos.")
     else:
-        col2 = st.columns(2, gap="medium")
-        with col1:
-            st.markdown('<p class="section-title">Top 10 localidades</p>', unsafe_allow_html=True)
-            top_loc = (df.groupby("cl_dir_localidad")["cl_k_cliente"]
-                       .nunique().reset_index(name="n")
-                       .sort_values("n", ascending=False).head(10)
-                       .sort_values("n", ascending=True))
-            bar_colors2 = ["#555570" if l == SIN_DATO else "#5794f2" for l in top_loc["cl_dir_localidad"]]
-            fig2 = go.Figure(go.Bar(
-                x=top_loc["n"], y=top_loc["cl_dir_localidad"], orientation="h",
-                marker_color=bar_colors2, marker_line_width=0,
-                text=top_loc["n"], textposition="outside",
-                textfont=dict(size=10, color="#a0a0b8"),
-            ))
-            fig2.update_layout(**layout(340, ml=12, mr=60, mt=36, mb=12),
-                               title=dict(text="Top 10 localidades (clientes únicos)", font=dict(size=12), x=0))
-            st.plotly_chart(fig2, use_container_width=True, config=NO_MB)
+        st.markdown('<p class="section-title">Top 10 localidades</p>', unsafe_allow_html=True)
+        top_loc = (df.groupby("cl_dir_localidad")["cl_k_cliente"]
+                   .nunique().reset_index(name="n")
+                   .sort_values("n", ascending=False).head(10)
+                   .sort_values("n", ascending=True))
+        bar_colors2 = ["#555570" if l == SIN_DATO else "#5794f2" for l in top_loc["cl_dir_localidad"]]
+        fig2 = go.Figure(go.Bar(
+            x=top_loc["n"], y=top_loc["cl_dir_localidad"], orientation="h",
+            marker_color=bar_colors2, marker_line_width=0,
+            text=top_loc["n"], textposition="outside",
+            textfont=dict(size=10, color="#a0a0b8"),
+        ))
+        fig2.update_layout(**layout(340, ml=12, mr=60, mt=36, mb=12),
+                           title=dict(text="Top 10 localidades (clientes únicos)", font=dict(size=12), x=0))
+        st.plotly_chart(fig2, use_container_width=True, config=NO_MB)
 
         st.markdown('<p class="section-title">Modelo más comprado por localidad</p>', unsafe_allow_html=True)
         top_mod_loc = (df.groupby(["cl_dir_localidad", "am_modelocl"]).size()
