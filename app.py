@@ -152,7 +152,15 @@ with st.sidebar:
         prov_opts = sorted(df_raw["cl_dir_provincia"].unique().tolist())
         provincia_sel = st.multiselect("Provincia", prov_opts, placeholder="Todas")
     else:
-        provincia_sel = []
+        provincia_sel =  []
+        
+    # ── Multiselect: Localidad─────────────────────────────────────────────────
+    
+    if "cl_dir_localidad" in df_raw.columns:
+        loc_opts = sorted(df_raw["cl_dir_localidad"].unique().tolist())
+        localidad_sel = st.multiselect("Localidad", loc_opts, default=[])
+    else:
+        localidad_sel = []
 
     # ── Multiselect: Género ────────────────────────────────────────────────────
     if "Gender" in df_raw.columns:
@@ -175,7 +183,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("#### Vistas")
-    pagina = st.radio("", ["General", "Por modelo", "Por provincia", "Empresas", "Género"],
+    pagina = st.radio("", ["General", "Por modelo", "Por provincia", "Por localidad","Empresas", "Género"],
                       label_visibility="collapsed")
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -187,6 +195,8 @@ if modelo_sel:
     df = df[df["am_modelocl"].isin(modelo_sel)]
 if provincia_sel and "cl_dir_provincia" in df.columns:
     df = df[df["cl_dir_provincia"].isin(provincia_sel)]
+if localidad_sel and "cl_dir_localidad" in df.columns:
+    df = df[df["cl_dir_localidad"].isin(localidad_sel)]    
 # Gender NO se aplica a df global — solo en vista Género
 
 df_time = df.copy()
@@ -427,6 +437,70 @@ elif pagina == "Por provincia":
                    .rename(columns={"cl_dir_provincia":"Provincia",
                                      "am_modelocl":"Modelo más comprado","n":"Compras"}))
         st.dataframe(top_mod, use_container_width=True, hide_index=True)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# POR LOCALIDAD
+# ══════════════════════════════════════════════════════════════════════════════
+elif pagina == "Por localidad":
+
+    if "cl_dir_localidad" not in df.columns:
+        st.warning("No se encontró la columna cl_dir_localidad en tus datos.")
+    else:
+        col1, col2 = st.columns(2, gap="medium")
+
+        with col1:
+            loc_df = (df.groupby("cl_dir_localidad")
+                       .agg(clientes=("cl_k_cliente", "nunique"))
+                       .reset_index().sort_values("clientes", ascending=True))
+            bar_colors = ["#555570" if l == SIN_DATO else "#00aadd" for l in loc_df["cl_dir_localidad"]]
+            fig = go.Figure(go.Bar(
+                x=loc_df["clientes"], y=loc_df["cl_dir_localidad"], orientation="h",
+                marker_color=bar_colors, marker_line_width=0,
+                text=loc_df["clientes"], textposition="outside",
+                textfont=dict(size=10, color="#a0a0b8"),
+            ))
+            fig.update_layout(**layout(max(300, len(loc_df) * 22), ml=12, mr=60, mt=36, mb=12),
+                              title=dict(text="Clientes únicos por localidad", font=dict(size=12), x=0))
+            st.plotly_chart(fig, use_container_width=True, config=NO_MB)
+
+        with col2:
+            st.markdown('<p class="section-title">Top 10 localidades</p>', unsafe_allow_html=True)
+            top_loc = (df.groupby("cl_dir_localidad")["cl_k_cliente"]
+                       .nunique().reset_index(name="n")
+                       .sort_values("n", ascending=False).head(10)
+                       .sort_values("n", ascending=True))
+            bar_colors2 = ["#555570" if l == SIN_DATO else "#5794f2" for l in top_loc["cl_dir_localidad"]]
+            fig2 = go.Figure(go.Bar(
+                x=top_loc["n"], y=top_loc["cl_dir_localidad"], orientation="h",
+                marker_color=bar_colors2, marker_line_width=0,
+                text=top_loc["n"], textposition="outside",
+                textfont=dict(size=10, color="#a0a0b8"),
+            ))
+            fig2.update_layout(**layout(340, ml=12, mr=60, mt=36, mb=12),
+                               title=dict(text="Top 10 localidades (clientes únicos)", font=dict(size=12), x=0))
+            st.plotly_chart(fig2, use_container_width=True, config=NO_MB)
+
+        st.markdown('<p class="section-title">Modelo más comprado por localidad</p>', unsafe_allow_html=True)
+        top_mod_loc = (df.groupby(["cl_dir_localidad", "am_modelocl"]).size()
+                       .reset_index(name="n").sort_values("n", ascending=False)
+                       .groupby("cl_dir_localidad").first().reset_index()
+                       .rename(columns={"cl_dir_localidad": "Localidad",
+                                        "am_modelocl": "Modelo más comprado", "n": "Compras"}))
+        st.dataframe(top_mod_loc.sort_values("Compras", ascending=False),
+                     use_container_width=True, hide_index=True)
+
+        if "cl_dir_provincia" in df.columns:
+            st.markdown('<p class="section-title">Localidades por provincia</p>', unsafe_allow_html=True)
+            lp_df = (df.groupby(["cl_dir_provincia", "cl_dir_localidad"])["cl_k_cliente"]
+                     .nunique().reset_index(name="clientes")
+                     .sort_values("clientes", ascending=False))
+            st.dataframe(lp_df.rename(columns={
+                "cl_dir_provincia": "Provincia",
+                "cl_dir_localidad": "Localidad",
+                "clientes": "Clientes únicos"
+            }), use_container_width=True, hide_index=True)
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # EMPRESAS
